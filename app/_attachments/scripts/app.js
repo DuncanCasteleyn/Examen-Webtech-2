@@ -41,10 +41,10 @@ angular.module('movieApp', ['ngRoute'])
 					var filmList = filmListSrv.getPlayedAsActor(films);
 					console.log(JSON.stringify(filmList));
 					var doc = {};
-					doc.author = author;
 					doc.films = filmList
+					$scope.films = doc;
 					saveSrv.setObject(author, JSON.stringify(doc));
-					//console.log(saveSrv.getObject(author));
+					console.log("test: " + JSON.stringify(saveSrv.getObject(author)));
 				})
 		});
 	})
