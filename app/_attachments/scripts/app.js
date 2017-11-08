@@ -28,7 +28,7 @@ angular.module('movieApp', ['ngRoute'])
             });;
 	})
 
-	.controller('homeCtrl', function ($scope, searchSrv, authorSrv, saveSrv) {
+	.controller('homeCtrl', function ($scope, searchSrv, filmListSrv, saveSrv) {
 
 		$('#searchButton').on('click', function (e) {
 			var author = $('#authorText').val();
@@ -37,7 +37,10 @@ angular.module('movieApp', ['ngRoute'])
 
 			searchSrv.getAuthor(author)
 				.then(function(data) {
-					console.log(JSON.stringify(data));
+					var films = data.data[0].filmography.actor;
+					var filmList = filmListSrv.getPlayedAsActor(films);
+					console.log(JSON.stringify(filmList));
+					saveSrv.setObject(author, JSON.stringify(filmList))
 				})
 		});
 	})
@@ -58,27 +61,28 @@ angular.module('movieApp', ['ngRoute'])
 		};
 	})
 
-	.service('authorSrv', function ($http, $q) {
-		this.getZones = function () {
-			var q = $q.defer();
-			$http.get('http://datasets.antwerpen.be/v4/gis/paparkeertariefzones.json')
-				.then(function (data, status, headers, config) {
-					q.resolve(data.data);
-				}, function error(err) {
-					q.reject(err);
-				});
-
-			return q.promise;
-		};
+	.service('filmListSrv', function ($http, $q) {
+		this.getPlayedAsActor = function (filmJSONArray) {
+			var authorFilmArray = [];
+			console.log(authorFilmArray.length)
+			for(var i = 0; i < filmJSONArray.length; i++) {
+				var type = filmJSONArray[i].type;
+				console.log(type)
+				if(type === 'Film') {
+					authorFilmArray.push(filmJSONArray[i].title);
+				}
+			}
+			return authorFilmArray;
+		}
 	})
 
 	.service('saveSrv', function ($window, $http) {
 		this.setObject = function (key, value) {
-			$http.put('../../' + key, value);
+			$http.put('../../' + encodeURIComponent(key), value);
 		};
 
 		this.getObject = function (key) {
 			//return JSON.parse($window.localStorage[key] || '{}');
-			return JSON.parse($http.get('../../' + key));
+			return JSON.parse($http.get('../../' + encodeURIComponent(key)));
 		};
 	});
