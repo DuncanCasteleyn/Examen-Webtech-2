@@ -35,17 +35,23 @@ angular.module('movieApp', ['ngRoute'])
 			
 			console.log(author);
 
-			searchSrv.getAuthor(author)
+			saveSrv.getObject(author)
+			.then(function(data) {
+				console.log(JSON.stringify(data.data.films));
+				$scope.films = (data.data.films);
+			}, function() {
+				searchSrv.getAuthor(author)
 				.then(function(data) {
+					console.log(data);
 					var films = data.data[0].filmography.actor;
 					var filmList = filmListSrv.getPlayedAsActor(films);
 					console.log(JSON.stringify(filmList));
 					var doc = {};
-					doc.films = filmList
+					doc.films = filmList;
 					$scope.films = doc;
 					saveSrv.setObject(author, JSON.stringify(doc));
-					console.log("test: " + JSON.stringify(saveSrv.getObject(author)));
-				})
+				});
+			});
 		});
 	})
 
@@ -88,6 +94,6 @@ angular.module('movieApp', ['ngRoute'])
 
 		this.getObject = function (key) {
 			//return JSON.parse($window.localStorage[key] || '{}');
-			return JSON.parse($http.get('../../' + encodeURIComponent(key)));
+			return $http.get('../../' + encodeURIComponent(key));
 		};
 	});
