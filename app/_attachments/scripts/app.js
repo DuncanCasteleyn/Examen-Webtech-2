@@ -31,7 +31,7 @@ angular.module('movieApp', ['ngRoute'])
 	.controller('homeCtrl', function ($scope, searchSrv, filmListSrv, saveSrv) {
 
 		$('#searchButton').on('click', function (e) {
-			var author = $('#authorText').val();
+			var author = $('#authorText').val().toLowerCase();
 			
 			console.log(author);
 
@@ -40,7 +40,11 @@ angular.module('movieApp', ['ngRoute'])
 					var films = data.data[0].filmography.actor;
 					var filmList = filmListSrv.getPlayedAsActor(films);
 					console.log(JSON.stringify(filmList));
-					saveSrv.setObject(author, JSON.stringify(filmList))
+					var doc = {};
+					doc.author = author;
+					doc.films = filmList
+					saveSrv.setObject(author, JSON.stringify(doc));
+					//console.log(saveSrv.getObject(author));
 				})
 		});
 	})
@@ -78,7 +82,8 @@ angular.module('movieApp', ['ngRoute'])
 
 	.service('saveSrv', function ($window, $http) {
 		this.setObject = function (key, value) {
-			$http.put('../../' + encodeURIComponent(key), value);
+			var url = '../../' + encodeURIComponent(key);
+			$http.put(url, value);
 		};
 
 		this.getObject = function (key) {
