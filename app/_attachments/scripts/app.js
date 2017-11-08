@@ -43,13 +43,17 @@ angular.module('movieApp', ['ngRoute'])
 				searchSrv.getAuthor(author)
 				.then(function(data) {
 					console.log(data);
-					var films = data.data[0].filmography.actor;
-					var filmList = filmListSrv.getPlayedAsActor(films);
-					console.log(JSON.stringify(filmList));
-					var doc = {};
-					doc.films = filmList;
-					$scope.films = doc;
-					saveSrv.setObject(author, JSON.stringify(doc));
+					if(data.data) {
+						var films = data.data[0].filmography.actor;
+						var filmList = filmListSrv.getPlayedAsActor(films);
+						console.log(JSON.stringify(filmList));
+						var doc = {};
+						doc.films = filmList;
+						$scope.films = doc;
+						saveSrv.setObject(author, JSON.stringify(doc));
+					} else {
+						$scope.films = 'Didn\'t recieve required data from IMDB api: ' + JSON.stringify(data);
+					}
 				});
 			});
 		});
