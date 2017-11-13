@@ -49,7 +49,7 @@ angular.module('movieApp', ['ngRoute'])
 						console.log(JSON.stringify(filmList));
 						var doc = {};
 						doc.films = filmList;
-						$scope.films = doc;
+						$scope.films = filmList;
 						saveSrv.setObject(author, JSON.stringify(doc));
 					} else {
 						$scope.films = 'Didn\'t recieve required data from IMDB api: ' + JSON.stringify(data);
