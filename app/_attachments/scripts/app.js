@@ -17,21 +17,16 @@ angular.module('movieApp', ['ngRoute'])
 
 		$('#searchButton').on('click', function (e) {
 			var author = $('#authorText').val().toLowerCase();
-			
-			console.log(author);
 
 			saveSrv.getObject(author)
 			.then(function(data) {
-				console.log(JSON.stringify(data.data.films));
 				$scope.films = (data.data.films);
 			}, function() {
 				searchSrv.getAuthor(author)
 				.then(function(data) {
-					console.log(data);
 					if(data.data) {
 						var films = data.data[0].filmography.actor;
 						var filmList = filmListSrv.getPlayedAsActor(films);
-						console.log(JSON.stringify(filmList));
 						var doc = {};
 						doc.films = filmList;
 						$scope.films = filmList;
@@ -63,10 +58,8 @@ angular.module('movieApp', ['ngRoute'])
 	.service('filmListSrv', function () {
 		this.getPlayedAsActor = function (filmJSONArray) {
 			var authorFilmArray = [];
-			console.log(authorFilmArray.length)
 			for(var i = 0; i < filmJSONArray.length; i++) {
 				var type = filmJSONArray[i].type;
-				console.log(type)
 				if(type === 'Film') {
 					authorFilmArray.push(filmJSONArray[i].title);
 				}
