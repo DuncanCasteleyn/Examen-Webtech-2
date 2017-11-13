@@ -1,20 +1,5 @@
 'use strict'
 
-/*var tariffs = [
-	    			{'kleur': 'Rood', 'max': 3, 'start': 9, 'einde': 22, 'dagen': [0, 1, 2, 3, 4, 5],
-	    			'tarief': [1.60, 2.70, 3.80]},
-	    			{'kleur': 'Donkergroen', 'max': 10, 'start': 9, 'einde': 19, 'dagen': [0, 1, 2, 3, 4, 5],
-	    			'tarief': [0.70, 1.10], 'dagticket': 3.80},
-	    			{'kleur': 'Lichtgroen', 'max': 10, 'start': 9, 'einde': 19, 'dagen': [0, 1, 2, 3, 4, 5],
-	    			'tarief': [0.70, 1.10]},
-	    			{'kleur': 'Geel', 'max': 10, 'start': 9, 'einde': 19, 'dagen': [0, 1, 2, 3, 4, 5],
-	    			'tarief': [0.50]},
-	    			{'kleur': 'Oranje', 'max': 10, 'start': 9, 'einde': 19, 'dagen': [0, 1, 2, 3, 4, 5],
-	    			'tarief': [0.50], 'dagticket': 2.70},
-	    			{'kleur': 'Blauw', 'max': 2, 'start': 9, 'einde': 18, 'dagen': [0, 1, 2, 3, 4, 5],
-	    			'tarief': [0]}
-	    		];*/
-
 angular.module('movieApp', ['ngRoute'])
 
 	.config(function ($routeProvider) {
@@ -75,7 +60,7 @@ angular.module('movieApp', ['ngRoute'])
 		};
 	})
 
-	.service('filmListSrv', function ($http, $q) {
+	.service('filmListSrv', function () {
 		this.getPlayedAsActor = function (filmJSONArray) {
 			var authorFilmArray = [];
 			console.log(authorFilmArray.length)
@@ -90,14 +75,13 @@ angular.module('movieApp', ['ngRoute'])
 		}
 	})
 
-	.service('saveSrv', function ($window, $http) {
+	.service('saveSrv', function ($http) {
 		this.setObject = function (key, value) {
 			var url = '../../' + encodeURIComponent(key);
 			$http.put(url, value);
 		};
 
 		this.getObject = function (key) {
-			//return JSON.parse($window.localStorage[key] || '{}');
 			return $http.get('../../' + encodeURIComponent(key));
 		};
 	});
